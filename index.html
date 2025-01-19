@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickCode Editor</title>
+  <link href="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/lib/codemirror.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    #editor-container {
+      display: flex;
+      flex-grow: 1;
+    }
+    #editor {
+      width: 50%;
+      height: 100%;
+      border-right: 1px solid #ccc;
+    }
+    #preview {
+      width: 50%;
+      height: 100%;
+      background: #f4f4f4;
+      overflow-y: auto;
+    }
+    #toolbar {
+      padding: 0.5rem;
+      background: #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QuickCode Editor</h1>
+  </header>
+
+  <div id="toolbar">
+    <div>
+      <button onclick="runCode()">Run</button>
+      <button onclick="downloadCode()">Download</button>
+    </div>
+    <div>
+      <select id="theme" onchange="changeTheme()">
+        <option value="default">Default</option>
+        <option value="darcula">Darcula</option>
+        <option value="solarized">Solarized</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="editor-container">
+    <textarea id="editor"><!DOCTYPE html>
+<html>
+  <head>
+    <title>QuickCode</title>
+  </head>
+  <body>
+    <h1>Welcome to QuickCode Editor!</h1>
+    <p>Edit your code here...</p>
+  </body>
+</html>
+</textarea>
+    <iframe id="preview"></iframe>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/xml/xml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/javascript/javascript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/css/css.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/addon/edit/closebrackets.js"></script>
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+      lineNumbers: true,
+      mode: "htmlmixed",
+      autoCloseBrackets: true,
+      theme: "default",
+    });
+
+    const preview = document.getElementById('preview');
+
+    function runCode() {
+      const code = editor.getValue();
+      preview.srcdoc = code;
+    }
+
+    function downloadCode() {
+      const code = editor.getValue();
+      const blob = new Blob([code], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function changeTheme() {
+      const theme = document.getElementById('theme').value;
+      editor.setOption('theme', theme);
+    }
+  </script>
+</body>
+</html>
